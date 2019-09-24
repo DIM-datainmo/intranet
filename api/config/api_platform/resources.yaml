@@ -1,0 +1,13 @@
+App\Entity\Article:
+    itemOperations:
+        get:
+            method: 'GET'
+            path: '/article/{id}'
+            requirements:
+                id: '\d+'
+            status: 200 # customize the HTTP status code to send
+        put:
+            method: 'PUT'
+            path: '/article/{id}/update'
+            requirements:
+                id: '\d+'
