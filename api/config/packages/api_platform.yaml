@@ -23,3 +23,7 @@ api_platform:
     mercure:
         hub_url: '%env(MERCURE_SUBSCRIBE_URL)%'
     
+    collection:
+        pagination:
+            page_parameter_name: _page
+            items_per_page: 10

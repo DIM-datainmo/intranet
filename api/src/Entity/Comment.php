@@ -5,16 +5,53 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use App\Controller\CreateArticleComment;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 /**
  * @ApiResource(
+ *     collectionOperations={
+ *          "get",
+ *          "post_comment"={
+ *                  "method"="POST",
+ *                  "path"="/articles/{id}/comments",
+ *                  "requirements"={"id"="\d+"},
+ *                  "controller"=CreateArticleComment::class,
+ *                  "swagger_context"= {
+ *                      "summary"= "Commenter un article",
+ *                      "description"= "Permet d'ajouter un commentaire à un article",
+ *                  },
+ *           },
+ *     },
+ *
+ *     itemOperations={
+ *          "delete",
+ *          "get",
+ *          "put"={
+ *                  "method"="PUT",
+ *                  "path"="/articles/{article_id}/comments/{id}",
+ *                  "requirements"={"article_id"="\d+", "id"="\d+"},
+ *                  "swagger_context"= {
+ *                      "summary"= "Mettre à jour le commentaire d'un article",
+ *                      "description"= "Permet de mettre àjour un commentaire dans un article",
+ *                  },
+ *           },
+ *     },
+ *
  *     subresourceOperations={
  *       "api_articles_comment_get_subresource"={
  *           "method"="GET",
  *           "normalization_context"={"groups"={"read"}}
+ *       },
+ *       "api_articles_comment_post_subresource"={
+ *           "method"="POST",
+ *           "denormalization_context"={"groups"={"write"}}
  *       }
- *    }
+ *    },
+ *
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
 
@@ -25,31 +62,34 @@ class Comment
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"articles"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"read"})
+     * @Groups({"articles"})
+     * @Assert\NotBlank()
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"read"})
+     * @Groups({"articles"})
      *
      */
     private $dateCreated;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default" : 0})
+     * @Groups({"articles"})
      */
-    private $isPublished;
+    private $isPublished = false;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Article", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)
+     *
      */
     private $article;
 
@@ -98,6 +138,7 @@ class Comment
 
         return $this;
     }
+
 
     public function getArticle(): ?Article
     {

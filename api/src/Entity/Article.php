@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,18 +10,23 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * @ApiResource(
+ *     attributes={"pagination_client_enabled"=true, "pagination_items_per_page"=30},
+ *
+ *     normalizationContext={"groups"={"articles"}},
  *     itemOperations={
- *     "get"={"method"="GET", "path"="/article/{id}", "requirements"={"id"="\d+"}},
- *     "put"={"method"="PUT", "path"="/article/{id}/update"},
+ *         "get"={"method"="GET", "path"="/articles/{id}", "requirements"={"id"="\d+"}},
+ *         "put"={"method"="PUT", "path"="/articles/{id}", "requirements"={"id"="\d+"}},
+ *         "delete"={"path"="articles/{id}", "requirements"={"id"="\d+"}}
  *     },
- *     normalizationContext={"groups"={"read"}},
- *     denormalizationContext={"groups"={"write"}},
+ *
  *     subresourceOperations={
  *          "comments_get_subresource"={
  *              "method"="GET",
- *              "path"="/article/{id}/comments"
+ *              "path"="/articles/{id}/comments",
+ *              "requirements"={"id"="\d+"}
  *          },
  *      },
  * )
@@ -34,27 +40,28 @@ class Article
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"articles", "categories"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
-     * @Groups({"read", "write"})
+     * @Groups({"articles", "categories"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank
-     * @Groups({"read", "write"})
+     * @Groups({"articles", "categories"})
      */
     private $body;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\NotNull
-     * @Groups({"read", "write"})
+     * @Groups({"articles"})
      */
     private $dateCreated;
 
@@ -66,14 +73,15 @@ class Article
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="articles")
      * @Assert\NotNull
-     * @Groups({"read"})
+     * @Groups({"articles"})
      */
     private $categories;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article", orphanRemoval=true)
+     *@ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article", orphanRemoval=true)
      *@ApiSubresource
-     *@Groups({"read"})
+     *@Groups({"articles"})
+     *
      */
     private $comments;
 
@@ -81,6 +89,14 @@ class Article
      * @ORM\Column(type="boolean")
      */
     private $isPublished;
+
+    /**
+     * @var MediaObject|null
+     * @ORM\ManyToOne(targetEntity=MediaObject::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @ApiProperty(iri="http://schema.org/image")
+     */
+    private $image;
 
 
     public function __construct()
@@ -213,6 +229,21 @@ class Article
         return $this;
     }
 
+    /**
+     * @return MediaObject
+     */
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param MediaObject $image
+     */
+    public function setImage(MediaObject $image): void
+    {
+        $this->image = $image;
+    }
 
 
 }

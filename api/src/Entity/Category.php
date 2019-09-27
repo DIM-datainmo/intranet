@@ -12,24 +12,25 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ApiResource(
- *     normalizationContext={"groups"={"get"}},
+ *     normalizationContext={"groups"={"get","categories"}},
+ *     denormalizationContext={"groups"={"categories"}},
  *     itemOperations={
  *         "get",
  *         "put"={
- *             "normalization_context"={"groups"={"put"}}
- *         }
+ *             "normalization_context"={"groups"={"categories"}}
+ *         },
+ *         "delete"={"path"="/categories/{id}"},
  *     },
- *     denormalizationContext={"groups"={"write"}},
+ *     collectionOperations={
+ *          "get",
+ *          "post",
+ *     },
  *     subresourceOperations={
- *          "articles_get_subresource"={
+ *          "category_articles_get_subresource"={
  *              "method"="GET",
- *              "path"="/category/{id}/articles"
+ *              "path"="/categories/{id}/articles"
  *          },
- *          "api_category_articles_get_subresource"={
- *           "method"="GET",
- *           "normalization_context"={"groups"={"read"}}
- *          }
- *      },
+ *     },
  * )
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
  */
@@ -39,26 +40,27 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"get", "read"})
+     * @Groups({"articles", "categories"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"get", "read"})
+     * @Groups({"articles", "categories"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"get", "read"})
+     * @Groups({"articles", "categories"})
      */
     private $description;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Article", mappedBy="categories")
-     * @Groups({"get"})
+     * @Groups({"get", "categories"})
      * @ApiSubresource(maxDepth=1)
+     * @Groups({"categories"})
      */
     private $articles;
 
