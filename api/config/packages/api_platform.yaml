@@ -27,3 +27,9 @@ api_platform:
         pagination:
             page_parameter_name: _page
             items_per_page: 10
+
+    swagger:
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
