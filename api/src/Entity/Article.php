@@ -95,6 +95,8 @@ class Article
      * @ORM\ManyToOne(targetEntity=MediaObject::class)
      * @ORM\JoinColumn(nullable=true)
      * @ApiProperty(iri="http://schema.org/image")
+     * @ApiSubresource()
+     * @Groups({"articles"})
      */
     private $image;
 

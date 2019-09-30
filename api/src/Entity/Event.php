@@ -2,11 +2,24 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={"pagination_client_enabled"=true, "pagination_items_per_page"=30},
+ *
+ *     normalizationContext={"groups"={"events"}},
+ *     itemOperations={
+ *         "get"={"method"="GET", "requirements"={"id"="\d+"}},
+ *         "put"={"method"="PUT","requirements"={"id"="\d+"}},
+ *         "delete"={"method"="DELETE","requirements"={"id"="\d+"}},
+ *     },
+ *
+ * )
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
  */
 class Event
@@ -42,6 +55,15 @@ class Event
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $location;
+
+    /**
+     * @var MediaObject|null
+     * @ORM\ManyToOne(targetEntity=MediaObject::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @ApiProperty(iri="http://schema.org/event")
+     * @ApiSubresource()
+     */
+    private $image;
 
     public function getId(): ?int
     {
@@ -107,4 +129,22 @@ class Event
 
         return $this;
     }
+
+    /**
+     * @return MediaObject|null
+     */
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param MediaObject|null $image
+     */
+    public function setImage(?MediaObject $image): void
+    {
+        $this->image = $image;
+    }
+
+
 }

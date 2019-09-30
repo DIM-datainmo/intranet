@@ -22,11 +22,12 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *         "post"={
  *             "controller"=CreateMediaObjectAction::class,
  *             "deserialize"=false,
- *             "access_control"="is_granted('ROLE_USER')",
  *             "validation_groups"={"Default", "media_object_create"},
  *             "swagger_context"={
  *                 "consumes"={
  *                     "multipart/form-data",
+ *                      "summary"= "Gestion des médias",
+ *                      "description"= "Permet d'ajouter des médias tels que des photos, des pdfs,...",
  *                 },
  *                 "parameters"={
  *                     {
@@ -42,6 +43,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *     },
  *     itemOperations={
  *         "get",
+ *          "delete",
  *     },
  * )
  * @Vich\Uploadable
