@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="postgres://api-platform:!ChangeMe!@db/api" uuid="01574626-06b1-4e4e-aae4-fe723d713272">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>postgres://api-platform:!ChangeMe!@db/api</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="api@localhost" uuid="48076f05-0858-4acd-bbc8-311c034c6cd7">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/api</jdbc-url>
+    </data-source>
+  </component>
+</project>

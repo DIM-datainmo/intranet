@@ -65,6 +65,27 @@ class Event
      */
     private $image;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="events")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isPublished = false;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdDate;
+
+    public function __construct()
+    {
+        $this->createdDate = new \DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -144,6 +165,42 @@ class Event
     public function setImage(?MediaObject $image): void
     {
         $this->image = $image;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getIsPublished(): ?bool
+    {
+        return $this->isPublished;
+    }
+
+    public function setIsPublished(?bool $isPublished): self
+    {
+        $this->isPublished = $isPublished;
+
+        return $this;
+    }
+
+    public function getCreatedDate(): ?\DateTimeInterface
+    {
+        return $this->createdDate;
+    }
+
+    public function setCreatedDate(\DateTimeInterface $createdDate): self
+    {
+        $this->createdDate = $createdDate;
+
+        return $this;
     }
 
 
