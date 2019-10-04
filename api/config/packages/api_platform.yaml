@@ -33,3 +33,28 @@ api_platform:
             apiKey:
                 name: Authorization
                 type: header
+
+    oauth:
+        # To enable or disable oauth.
+        enabled: false
+
+        # The oauth client id.
+        clientId: '149026378290-l1qmqto29bpnegc9263j4uto0kkuorsd.apps.googleusercontent.com'
+
+        # The oauth client secret.
+        clientSecret: 'hxoKewQWgPwZCarYRmBJGC_f'
+
+        # The oauth type.
+        type: 'oauth2'
+
+        # The oauth flow grant type.
+        flow: 'application'
+
+        # The oauth token url.
+        tokenUrl: 'https://accounts.google.com/o/oauth2/token'
+
+        # The oauth authentication url.
+        authorizationUrl: 'https://accounts.google.com/o/oauth2/auth'
+
+        # The oauth scopes.
+        scopes: []

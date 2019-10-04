@@ -13,7 +13,7 @@ class EventFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $userRepo = $manager->getRepository(User::class);
-        $user = $userRepo->findAll()[0];
+        $user = $userRepo->findOneUser();
 
         $faker = Factory::create('fr_FR');
         $startDate = $faker->dateTimeBetween('next Monday', 'next Monday +7 days');
@@ -31,5 +31,12 @@ class EventFixtures extends Fixture
             $manager->persist($event);
             $manager->flush();
         }
+    }
+
+    public function getDependencies()
+    {
+        return [
+            UserFixtures::class,
+        ];
     }
 }

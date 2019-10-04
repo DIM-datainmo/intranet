@@ -2,12 +2,39 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
+ * @ApiResource(
+
+ *      itemOperations={
+ *          "get",
+ *          "delete"={"security"="is_granted('ROLE_ADMIN')"},
+ *          "put"={"security"="is_granted('ROLE_ADMIN')"}
+ *     },
+ *      collectionOperations={
+            "get",
+ *          "create_user"={
+ *              "security"="is_granted('ROLE_ADMIN')",
+ *               "method"="POST",
+ *               "path"="/articles/{id}/comments",
+ *               "requirements"={"id"="\d+"},
+ *               "controller"=CreateArticleComment::class,
+ *               "swagger_context"= {
+ *                    "summary"= "Créer un nouvel utilisateur",
+ *                    "description"= "Permet à un admin d'ajouter un nouvel utilisateur. Envoie ensuite un mail au nouvel utilisateur",
+ *                },
+ *          },
+ *
+ *     }
+ *
+ * )
+ *
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
  */

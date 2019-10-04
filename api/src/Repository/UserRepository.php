@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
+use Psr\Log\LoggerInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +17,37 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+
+    /**
+     * @var EntityManager
+     */
+    private $manager;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(ManagerRegistry $registry, LoggerInterface $logger)
     {
         parent::__construct($registry, User::class);
+        $this->manager = $registry->getEntityManager();
+        $this->logger = $logger;
+    }
+
+    public function createNewUser($data)
+    {
+        $user = new User();
+        $user->setEmail($data['email'])
+            ->setPassword($data['password']);
+
+        try {
+            $this->manager->persist($user);
+            $this->manager->flush();
+        } catch (ORMException $e) {
+            $this->logger->error($e->getMessage());
+        }
+
+        return $user;
     }
 
     // /**
@@ -36,15 +67,14 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?User
+
+    public function findOneUser(): ?User
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
+            ->setMaxResults(1)
             ->getQuery()
-            ->getOneOrNullResult()
+            ->getOneOrNullResult();
         ;
     }
-    */
+
 }

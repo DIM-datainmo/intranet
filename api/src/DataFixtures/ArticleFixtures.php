@@ -18,7 +18,7 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
     {
 
         $userRepo = $manager->getRepository(User::class);
-        $user = $userRepo->findAll()[0];
+        $user = $userRepo->findOneUser();
 
         $categoriesRepo = $manager->getRepository(Category::class);
         $categoriesArray = [];
@@ -45,12 +45,14 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
 
 
             for ($j = 0; $j <= 2; $j++){
+                echo 'id: '.$user->getEmail();
                 $comment = new Comment();
                 $comment->setContent('On a adoré l\'article');
                 $comment->setIsPublished(true);
+                $comment->setAuthor($user);
                 $manager->persist($comment);
                 $article->addComment($comment);
-                $article->setAuthor($user);
+
 
             }
 
@@ -63,6 +65,7 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
+            UserFixtures::class,
             CategoryFixtures::class,
         ];
     }
